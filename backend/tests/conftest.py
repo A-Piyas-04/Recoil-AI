@@ -1,8 +1,12 @@
 import os
 
-os.environ.setdefault("AI_MOCK_MODE", "true")
+os.environ["AI_MOCK_MODE"] = "true"
 
 import pytest
+
+from app.core.config import get_settings
+
+get_settings.cache_clear()
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -34,6 +38,13 @@ def db_session():
 
 @pytest.fixture
 def client(db_session):
+    from app.core import config
+    from app.services.ai import service as ai_service
+
+    get_settings.cache_clear()
+    config.settings = get_settings()
+    ai_service.settings = config.settings
+
     def override_get_db():
         try:
             yield db_session

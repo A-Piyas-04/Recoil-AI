@@ -20,8 +20,13 @@ router = APIRouter()
 
 @router.post("/analyze", response_model=AnalyzeResponse, status_code=201)
 def analyze_campaign(payload: AnalyzeRequest, db: Session = Depends(get_db)):
-    row, result = run_and_persist_analysis(db, payload)
-    return AnalyzeResponse(analysis_id=row.id, result=result, created_at=row.created_at)
+    row, result, ai_source = run_and_persist_analysis(db, payload)
+    return AnalyzeResponse(
+        analysis_id=row.id,
+        result=result,
+        created_at=row.created_at,
+        ai_source=ai_source,
+    )
 
 
 @router.get("/analyses", response_model=list[AnalysisSummary])
@@ -57,4 +62,5 @@ def get_analysis(analysis_id: UUID, db: Session = Depends(get_db)):
         backlash_risk_score=row.backlash_risk_score,
         result=AnalysisResult.model_validate(row.result_json),
         created_at=row.created_at,
+        ai_source=getattr(row, "ai_source", "mock"),
     )

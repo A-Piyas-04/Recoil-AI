@@ -13,6 +13,7 @@ from app.services.ai import (
     AINetworkError,
     AIResponseError,
     AIServiceError,
+    ai_source_label,
     generate_analysis,
 )
 
@@ -51,7 +52,7 @@ def resolve_brand_context(db: Session, request: AnalyzeRequest) -> BrandContext:
     )
 
 
-def run_and_persist_analysis(db: Session, request: AnalyzeRequest) -> tuple[Analysis, AnalysisResult]:
+def run_and_persist_analysis(db: Session, request: AnalyzeRequest) -> tuple[Analysis, AnalysisResult, str]:
     context = resolve_brand_context(db, request)
 
     try:
@@ -73,6 +74,8 @@ def run_and_persist_analysis(db: Session, request: AnalyzeRequest) -> tuple[Anal
     except (AIResponseError, AIServiceError) as exc:
         raise HTTPException(status_code=422, detail=exc.user_message) from exc
 
+    source = ai_source_label()
+
     row = Analysis(
         brand_profile_id=context.brand_profile_id,
         campaign_draft=request.campaign_draft,
@@ -80,9 +83,10 @@ def run_and_persist_analysis(db: Session, request: AnalyzeRequest) -> tuple[Anal
         brand_mission=context.brand_mission,
         previous_messaging=context.previous_messaging,
         backlash_risk_score=result.backlash_risk_score,
+        ai_source=source,
         result_json=result.model_dump(mode="json"),
     )
     db.add(row)
     db.commit()
     db.refresh(row)
-    return row, result
+    return row, result, source

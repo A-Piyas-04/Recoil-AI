@@ -62,6 +62,16 @@ export function ResultsPage() {
           <h1 className="font-serif text-3xl font-semibold text-ink">Campaign red-team report</h1>
           <p className="mt-1 text-sm text-muted">
             {new Date(data.created_at).toLocaleString()} · Risk {data.backlash_risk_score}/100
+            {data.ai_source !== "mock" && (
+              <span className="ml-2 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+                AI ({data.ai_source})
+              </span>
+            )}
+            {data.ai_source === "mock" && (
+              <span className="ml-2 rounded-full bg-risk-mid/10 px-2 py-0.5 text-xs font-medium text-risk-mid">
+                Demo data
+              </span>
+            )}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

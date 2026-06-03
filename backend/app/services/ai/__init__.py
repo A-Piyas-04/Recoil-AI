@@ -6,7 +6,7 @@ from app.services.ai.exceptions import (
     AIResponseError,
     AIServiceError,
 )
-from app.services.ai.service import generate_analysis
+from app.services.ai.service import ai_source_label, generate_analysis
 
 __all__ = [
     "AIAuthenticationError",
@@ -15,5 +15,6 @@ __all__ = [
     "AINetworkError",
     "AIResponseError",
     "AIServiceError",
+    "ai_source_label",
     "generate_analysis",
 ]

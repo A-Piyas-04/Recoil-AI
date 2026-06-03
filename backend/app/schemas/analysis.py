@@ -95,6 +95,7 @@ class AnalyzeResponse(BaseModel):
     analysis_id: UUID
     result: AnalysisResult
     created_at: datetime
+    ai_source: str = "mock"
 
 
 class AnalysisSummary(BaseModel):
@@ -116,5 +117,6 @@ class AnalysisDetail(BaseModel):
     backlash_risk_score: int
     result: AnalysisResult
     created_at: datetime
+    ai_source: str = "mock"
 
     model_config = {"from_attributes": True}

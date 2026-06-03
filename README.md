@@ -168,11 +168,14 @@ Optional: `brand_profile_id` to reuse a saved brand profile.
 **Database + API:**
 
 ```powershell
-docker compose up db -d
 cd backend
 pip install -r requirements.txt
-alembic upgrade head
-$env:DATABASE_URL="postgresql+psycopg://app:PASSWORD@localhost:5432/app_db"
+# No Docker? Use SQLite (tables auto-created on startup):
+$env:DATABASE_URL="sqlite:///./recoil.db"
+# With Docker Postgres:
+# docker compose up db -d
+# $env:DATABASE_URL="postgresql+psycopg://app:PASSWORD@localhost:5432/app_db"
+# alembic upgrade head
 $env:AI_MOCK_MODE="true"
 uvicorn app.main:app --reload --port 8000
 ```

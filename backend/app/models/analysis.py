@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import DateTime, ForeignKey, Integer, JSON, Text, Uuid, func
+from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String, Text, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -23,6 +23,7 @@ class Analysis(Base):
     brand_mission: Mapped[str] = mapped_column(Text, nullable=False)
     previous_messaging: Mapped[str] = mapped_column(Text, nullable=False)
     backlash_risk_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    ai_source: Mapped[str] = mapped_column(String(16), nullable=False, server_default="mock")
     result_json: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

@@ -52,3 +52,5 @@ desktop.ini
 
 # Database (local volumes)
 postgres_data/
+backend/recoil.db
+backend/*.db

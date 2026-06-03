@@ -62,6 +62,7 @@ export interface AnalyzeResponse {
   analysis_id: string;
   result: AnalysisResult;
   created_at: string;
+  ai_source: string;
 }
 
 export interface AnalysisSummary {
@@ -81,6 +82,7 @@ export interface AnalysisDetail {
   backlash_risk_score: number;
   result: AnalysisResult;
   created_at: string;
+  ai_source: string;
 }
 
 export const PERSONA_LABELS: Record<PersonaType, string> = {
