@@ -31,11 +31,22 @@ class Settings(BaseSettings):
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
+    # Tried in order when primary hits quota/rate limits or is unavailable.
+    gemini_fallback_models: str = "gemini-2.0-flash,gemini-1.5-flash,gemini-2.5-flash-lite"
     # Deprecated: ignored. Use AI_MOCK_MODE instead.
     gemini_mock_mode: bool = False
 
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
+
+    @property
+    def gemini_models_chain(self) -> list[str]:
+        chain: list[str] = []
+        for name in (self.gemini_model, *self.gemini_fallback_models.split(",")):
+            model = name.strip()
+            if model and model not in chain:
+                chain.append(model)
+        return chain
 
     @property
     def gemini_feature_set(self) -> frozenset[str]:

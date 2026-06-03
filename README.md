@@ -134,7 +134,8 @@ Migrations run automatically on backend startup.
 | `AI_MOCK_MODE`     | `true` = all sections use demo data (no API)     |
 | `AI_GEMINI_FEATURES` | Comma list: `red_team`, `meme`, `risk`, `crisis`, `brand` — only these call Gemini when mock is off |
 | `GEMINI_API_KEY`   | Google Gemini API key (backend only, never frontend) |
-| `GEMINI_MODEL`     | Model id (default `gemini-2.5-flash`)            |
+| `GEMINI_MODEL`     | Primary model (default `gemini-2.5-flash`)       |
+| `GEMINI_FALLBACK_MODELS` | Comma-separated fallbacks tried on quota/rate-limit errors |
 | `OPENAI_API_KEY`   | OpenAI API key                                   |
 | `OPENAI_MODEL`     | Model id (default `gpt-4o-mini`)                 |
 | `CORS_ORIGINS`     | Comma-separated frontend origins                 |
