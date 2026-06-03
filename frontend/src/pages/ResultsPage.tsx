@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { formatAnalysisReport } from "../lib/report";
 import { BrandConsistencySection } from "../components/results/BrandConsistencySection";
 import { CrisisSection } from "../components/results/CrisisSection";
 import { MemeSimulatorSection } from "../components/results/MemeSimulatorSection";
@@ -13,6 +14,7 @@ export function ResultsPage() {
   const [data, setData] = useState<AnalysisDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -40,6 +42,16 @@ export function ResultsPage() {
 
   const { result } = data;
 
+  async function copyReport() {
+    try {
+      await navigator.clipboard.writeText(formatAnalysisReport(data!));
+      setCopyStatus("Report copied to clipboard");
+      setTimeout(() => setCopyStatus(null), 2500);
+    } catch {
+      setCopyStatus("Could not copy — try selecting text manually");
+    }
+  }
+
   return (
     <div className="space-y-8">
       <header className="flex flex-wrap items-start justify-between gap-4">
@@ -52,13 +64,29 @@ export function ResultsPage() {
             {new Date(data.created_at).toLocaleString()} · Risk {data.backlash_risk_score}/100
           </p>
         </div>
-        <Link
-          to="/analyze"
-          className="rounded-md border border-border bg-paper px-4 py-2 text-sm font-medium text-ink no-underline hover:border-accent"
-        >
-          New analysis
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={copyReport}
+            className="rounded-md border border-border bg-paper px-4 py-2 text-sm font-medium text-ink hover:border-accent"
+          >
+            Copy report
+          </button>
+          <Link
+            to="/analyze"
+            className="rounded-md border border-border bg-paper px-4 py-2 text-sm font-medium text-ink no-underline hover:border-accent"
+          >
+            New analysis
+          </Link>
+        </div>
       </header>
+
+      {copyStatus && <p className="text-sm text-accent">{copyStatus}</p>}
+
+      <p className="rounded-md border border-border bg-surface px-4 py-3 text-xs leading-relaxed text-muted">
+        Fictional red-team scenarios for pre-launch planning only. Not legal advice or a substitute
+        for professional PR review.
+      </p>
 
       <details className="rounded-lg border border-border bg-paper px-4 py-3">
         <summary className="cursor-pointer text-sm font-medium text-muted">

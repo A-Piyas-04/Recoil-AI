@@ -4,6 +4,19 @@ AI-powered campaign red-team tool that predicts how a marketing campaign could b
 
 Built on **FastAPI**, **React (TypeScript + Vite + Tailwind)**, **PostgreSQL**, and **Gemini or OpenAI** (configurable).
 
+### Faultline AI — Next.js MVP (`web/`)
+
+Standalone **Next.js** app with **no database**: landing page, campaign form, `POST /api/analyze`, and results dashboard. Switch providers via `AI_PROVIDER=openai|gemini`.
+
+```powershell
+cd web
+Copy-Item .env.example .env.local
+npm install
+npm run dev
+```
+
+→ http://localhost:3000 — see [web/README.md](web/README.md).
+
 ## Features
 
 All four modules run in a **single AI request** per analysis.
@@ -78,9 +91,9 @@ Backfire Risk
 
 ### Feature 4 — Pre-Mortem Generator ⭐⭐⭐
 
-Another huge wow factor — *"Imagine this campaign failed. Why?"*
+*"Imagine this campaign failed. Why?"*
 
-Very easy to implement. Very impactful.
+
 
 **Example output:**
 
@@ -139,12 +152,14 @@ Migrations run automatically on backend startup.
 
 ```json
 {
-  "campaign_name": "EcoLux Summer",
-  "slogan": "Luxury that listens",
-  "campaign_description": "Premium eco push…",
-  "campaign_copy": "Headlines and body copy…"
+  "campaign_draft": "Full campaign copy (50+ characters)…",
+  "brand_values": "Transparency, sustainability…",
+  "brand_mission": "Make sustainable products accessible",
+  "previous_messaging": "Prior brand voice and commitments…"
 }
 ```
+
+Optional: `brand_profile_id` to reuse a saved brand profile.
 
 ## Local development
 

@@ -12,6 +12,9 @@ def test_mock_mode_returns_valid_result(monkeypatch):
     from app.core import config
 
     config.settings = get_settings()
+    from app.services.ai import service as ai_service
+
+    ai_service.settings = config.settings
 
     result = generate_analysis(
         campaign_draft="x" * 50,
@@ -33,5 +36,8 @@ def test_invalid_provider_raises(monkeypatch):
 
     config.settings = get_settings()
 
+    from app.services.ai import service as ai_service
+
+    ai_service.settings = get_settings()
     with pytest.raises(AIConfigurationError):
-        _resolve_provider()
+        ai_service._resolve_provider()

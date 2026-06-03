@@ -32,8 +32,12 @@ export function AppShell() {
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
         <Outlet />
       </main>
-      <footer className="border-t border-border bg-paper py-6 text-center text-sm text-muted">
-        Campaign red-team analysis · Pre-launch risk assessment
+      <footer className="border-t border-border bg-paper px-6 py-6 text-center text-sm text-muted">
+        <p>Campaign red-team analysis · Pre-launch risk assessment</p>
+        <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed">
+          Scenarios are AI-generated fiction for planning and rehearsal—not legal advice, not
+          real-time social monitoring, and not a guarantee of launch outcomes.
+        </p>
       </footer>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { api } from "../lib/api";
+import { SAMPLE_BRAND, SAMPLE_CAMPAIGN } from "../lib/sampleCampaign";
 import { BrandProfileForm, type BrandProfileFormValues } from "../components/forms/BrandProfileForm";
 import { BrandProfileSelect } from "../components/forms/BrandProfileSelect";
 import { CampaignForm } from "../components/forms/CampaignForm";
@@ -30,6 +31,14 @@ export function AnalyzePage() {
   }, []);
 
   const useProfile = Boolean(selectedProfileId);
+
+  function loadSample() {
+    setCampaign(SAMPLE_CAMPAIGN);
+    if (!useProfile) {
+      setBrand(SAMPLE_BRAND);
+    }
+    setValidationError(null);
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -75,17 +84,32 @@ export function AnalyzePage() {
   }
 
   return (
-    <div className="page analyze-page">
-      <h1>New campaign analysis</h1>
-      <p className="section-desc">
-        Submit your draft and brand context. All five MVP checks run in one pass.
+    <div className="max-w-2xl">
+      <h1 className="font-serif text-3xl font-semibold text-ink">New campaign analysis</h1>
+      <p className="mt-2 text-muted">
+        Submit your draft and brand context. All five checks run in one pass.
       </p>
 
-      <form onSubmit={handleSubmit} className="analyze-form">
-        <CampaignForm value={campaign} onChange={setCampaign} disabled={loading} />
+      {loading && (
+        <div
+          className="mt-6 rounded-lg border border-border bg-paper px-4 py-3 text-sm text-ink"
+          role="status"
+          aria-live="polite"
+        >
+          Running red-team analysis… This usually takes 15–45 seconds.
+        </div>
+      )}
 
-        <fieldset className="brand-fieldset">
-          <legend>Brand context</legend>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-8">
+        <CampaignForm
+          value={campaign}
+          onChange={setCampaign}
+          disabled={loading}
+          onAutofill={loadSample}
+        />
+
+        <fieldset className="space-y-4 rounded-lg border border-border bg-paper p-5">
+          <legend className="px-1 text-sm font-semibold text-ink">Brand context</legend>
           <BrandProfileSelect
             profiles={profiles}
             selectedId={selectedProfileId}
@@ -95,12 +119,13 @@ export function AnalyzePage() {
 
           {!useProfile && (
             <>
-              <label className="checkbox-label">
+              <label className="flex items-center gap-2 text-sm text-muted">
                 <input
                   type="checkbox"
                   checked={saveProfile}
                   onChange={(e) => setSaveProfile(e.target.checked)}
                   disabled={loading}
+                  className="rounded border-border"
                 />
                 Save as reusable brand profile
               </label>
@@ -109,18 +134,24 @@ export function AnalyzePage() {
           )}
 
           {useProfile && (
-            <p className="field-hint">
+            <p className="text-sm text-muted">
               Using saved profile. Select &quot;Use custom fields&quot; to enter context manually.
             </p>
           )}
         </fieldset>
 
         {(validationError || error) && (
-          <p className="status error">{validationError || error}</p>
+          <p className="rounded-md border border-risk-high/30 bg-risk-high/5 px-4 py-3 text-sm text-risk-high">
+            {validationError || error}
+          </p>
         )}
 
-        <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? "Running red-team analysis…" : "Run analysis"}
+        <button
+          type="submit"
+          className="rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-accent-hover disabled:opacity-60"
+          disabled={loading}
+        >
+          {loading ? "Analyzing…" : "Run analysis"}
         </button>
       </form>
     </div>

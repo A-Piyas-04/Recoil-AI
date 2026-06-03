@@ -31,7 +31,9 @@ def list_analyses(db: Session = Depends(get_db)):
     return [
         AnalysisSummary(
             id=row.id,
-            campaign_name=row.campaign_name,
+            campaign_snippet=(row.campaign_draft[:80] + "…")
+            if len(row.campaign_draft) > 80
+            else row.campaign_draft,
             backlash_risk_score=row.backlash_risk_score,
             created_at=row.created_at,
         )
@@ -47,10 +49,11 @@ def get_analysis(analysis_id: UUID, db: Session = Depends(get_db)):
 
     return AnalysisDetail(
         id=row.id,
-        campaign_name=row.campaign_name,
-        slogan=row.slogan,
-        campaign_description=row.campaign_description,
-        campaign_copy=row.campaign_copy,
+        brand_profile_id=row.brand_profile_id,
+        campaign_draft=row.campaign_draft,
+        brand_values=row.brand_values,
+        brand_mission=row.brand_mission,
+        previous_messaging=row.previous_messaging,
         backlash_risk_score=row.backlash_risk_score,
         result=AnalysisResult.model_validate(row.result_json),
         created_at=row.created_at,

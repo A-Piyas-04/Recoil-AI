@@ -1,5 +1,6 @@
 import { formatApiError } from "./errors";
 
+// Empty base URL uses Vite dev proxy (/api → backend). Set VITE_API_URL for production builds.
 const baseUrl = import.meta.env.VITE_API_URL ?? "";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {

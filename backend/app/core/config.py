@@ -9,7 +9,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    app_name: str = "Faultline AI API"
+    app_name: str = "Recoil AI API"
     api_v1_prefix: str = "/api/v1"
 
     environment: str = "development"

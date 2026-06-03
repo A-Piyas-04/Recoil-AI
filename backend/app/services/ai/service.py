@@ -3,7 +3,7 @@ from typing import Literal
 
 from app.core.config import settings
 from app.schemas.analysis import AnalysisResult, validate_analysis_result
-from app.services.ai.exceptions import AIConfigurationError
+from app.services.ai.exceptions import AIConfigurationError, AIResponseError
 from app.services.ai.mock_data import mock_analysis_result
 from app.services.ai.prompts import USER_PROMPT_TEMPLATE
 from app.services.ai.providers.gemini import generate_with_gemini
@@ -55,6 +55,10 @@ def generate_analysis(
         previous_messaging=previous_messaging,
     )
 
-    if provider == "gemini":
-        return generate_with_gemini(user_prompt)
-    return generate_with_openai(user_prompt)
+    try:
+        if provider == "gemini":
+            return generate_with_gemini(user_prompt)
+        return generate_with_openai(user_prompt)
+    except AIResponseError as exc:
+        logger.warning("Invalid AI response; falling back to demo analysis: %s", exc)
+        return validate_analysis_result(mock_analysis_result())

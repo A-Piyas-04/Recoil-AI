@@ -63,7 +63,7 @@ def mock_analysis_result() -> AnalysisResult:
                 "brand_reputation_risk": 61,
             },
             "future_crisis": {
-                "headline": "Faultline AI Mock: Viral clip forces weekend statement",
+                "headline": "Recoil AI Mock: Viral clip forces weekend statement",
                 "timeline": [
                     "T+0h: Launch post hits algorithmic boost",
                     "T+4h: Activist stitch video hits 2M views",

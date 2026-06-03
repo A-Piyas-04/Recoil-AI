@@ -13,7 +13,7 @@ function getProvider(): AiProvider {
   throw new Error(`AI_PROVIDER must be "openai" or "gemini", got: ${raw}`);
 }
 
-function useMockMode(): boolean {
+function isMockMode(): boolean {
   if (process.env.AI_MOCK_MODE === "true") {
     return true;
   }
@@ -109,7 +109,7 @@ async function callProvider(campaign: CampaignInput): Promise<string> {
 export async function generateAnalysis(
   campaign: CampaignInput,
 ): Promise<AnalysisResult> {
-  if (useMockMode()) {
+  if (isMockMode()) {
     return mockAnalysisResult();
   }
 
@@ -129,7 +129,7 @@ export async function generateAnalysis(
 }
 
 export function getActiveProviderLabel(): string {
-  if (useMockMode()) {
+  if (isMockMode()) {
     return "mock";
   }
   return getProvider();
