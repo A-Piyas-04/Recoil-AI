@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+
+# Environment (never bake secrets into images)
+.env
+.env.*
+!.env.example
+
+# Python
+**/__pycache__
+**/*.py[cod]
+.venv
+venv
+.pytest_cache
+.mypy_cache
+.ruff_cache
+htmlcov
+.coverage
+
+# Node
+**/node_modules
+frontend/dist
+frontend/.vite
+
+# IDE & OS
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+
+# Docs & local dev
+README.md
+*.md
+!backend/README.md
+
+# Tests & CI (optional: remove if you want tests in image)
+**/.pytest_cache
+**/tests
+
+# Docker & compose (not needed inside build context copies)
+docker-compose*.yml
+docker-compose*.yaml
+postgres_data

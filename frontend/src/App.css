@@ -1,0 +1,22 @@
+.app {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.tagline {
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.status {
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  background: #f1f5f9;
+}
+
+.status.error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
