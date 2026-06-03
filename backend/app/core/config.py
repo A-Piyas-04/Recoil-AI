@@ -25,17 +25,27 @@ class Settings(BaseSettings):
 
     ai_provider: str = "gemini"
     ai_mock_mode: bool = False
+    # Comma-separated features to run through Gemini when AI_MOCK_MODE=false and key is set.
+    # Options: red_team, meme, risk, crisis, brand
+    ai_gemini_features: str = "red_team,meme,risk,crisis"
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
+    # Deprecated: ignored. Use AI_MOCK_MODE instead.
     gemini_mock_mode: bool = False
 
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
 
     @property
-    def effective_mock_mode(self) -> bool:
-        return self.ai_mock_mode or self.gemini_mock_mode
+    def gemini_feature_set(self) -> frozenset[str]:
+        allowed = {"red_team", "meme", "risk", "crisis", "brand"}
+        parsed = {
+            part.strip().lower()
+            for part in self.ai_gemini_features.split(",")
+            if part.strip()
+        }
+        return frozenset(parsed & allowed)
 
     @property
     def cors_origins_list(self) -> list[str]:

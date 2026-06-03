@@ -1,7 +1,9 @@
 import logging
+from typing import TypeVar
 
 from google import genai
 from google.genai import types
+from pydantic import BaseModel
 
 from app.core.config import settings
 from app.schemas.analysis import AnalysisResult
@@ -11,13 +13,15 @@ from app.services.ai.exceptions import (
     AINetworkError,
     AIResponseError,
 )
-from app.services.ai.parser import parse_analysis_result
+from app.services.ai.parser import parse_analysis_result, parse_model
 from app.services.ai.prompts import SYSTEM_INSTRUCTION
 
 logger = logging.getLogger(__name__)
 
 _AUTH_HINTS = ("api key", "api_key", "permission", "unauthorized", "401", "403")
 _NETWORK_HINTS = ("timeout", "timed out", "connection", "network", "unavailable", "503", "502")
+
+T = TypeVar("T", bound=BaseModel)
 
 
 def _classify_gemini_error(exc: Exception) -> Exception:
@@ -38,7 +42,7 @@ def _classify_gemini_error(exc: Exception) -> Exception:
     )
 
 
-def generate_with_gemini(user_prompt: str) -> AnalysisResult:
+def generate_with_gemini_structured(user_prompt: str, schema: type[T]) -> T:
     client = genai.Client(api_key=settings.gemini_api_key)
     last_error: Exception | None = None
 
@@ -50,7 +54,7 @@ def generate_with_gemini(user_prompt: str) -> AnalysisResult:
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_INSTRUCTION,
                     response_mime_type="application/json",
-                    response_schema=AnalysisResult,
+                    response_schema=schema,
                 ),
             )
             text = response.text
@@ -59,7 +63,7 @@ def generate_with_gemini(user_prompt: str) -> AnalysisResult:
                     "Empty response from Gemini",
                     user_message="Gemini returned no content. Please try again.",
                 )
-            return parse_analysis_result(text)
+            return parse_model(text, schema)
         except (AIEmptyResponseError, AIResponseError):
             raise
         except Exception as exc:
@@ -68,3 +72,7 @@ def generate_with_gemini(user_prompt: str) -> AnalysisResult:
 
     assert last_error is not None
     raise last_error
+
+
+def generate_with_gemini(user_prompt: str) -> AnalysisResult:
+    return generate_with_gemini_structured(user_prompt, AnalysisResult)

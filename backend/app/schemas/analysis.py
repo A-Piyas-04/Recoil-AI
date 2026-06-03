@@ -45,6 +45,27 @@ class AnalysisResult(BaseModel):
     brand_consistency: BrandConsistencyResult
 
 
+class RedTeamResult(BaseModel):
+    red_team: list[PersonaCritique]
+
+
+class MemeSimulatorResult(BaseModel):
+    meme_concepts: list[MemeConcept]
+
+
+class RiskScoreResult(BaseModel):
+    backlash_risk_score: int = Field(..., ge=0, le=100)
+    risk_breakdown: RiskBreakdown
+
+
+class CrisisGeneratorResult(BaseModel):
+    future_crisis: CrisisScenario
+
+
+class BrandConsistencyOnlyResult(BaseModel):
+    brand_consistency: BrandConsistencyResult
+
+
 REQUIRED_PERSONAS = {"activist", "journalist", "competitor", "meme_creator"}
 
 
