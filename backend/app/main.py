@@ -1,5 +1,10 @@
+import logging
+import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
+from alembic import command
+from alembic.config import Config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -7,12 +12,26 @@ from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.database import engine
 
+logger = logging.getLogger(__name__)
+
+
+def run_migrations() -> None:
+    alembic_ini = Path(__file__).resolve().parents[1] / "alembic.ini"
+    if not alembic_ini.exists():
+        alembic_ini = Path(__file__).resolve().parents[2] / "alembic.ini"
+    cfg = Config(str(alembic_ini))
+    cfg.set_main_option("sqlalchemy.url", settings.database_url)
+    command.upgrade(cfg, "head")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: e.g. await connection checks, seed data
+    if os.getenv("PYTEST_CURRENT_TEST") is None:
+        try:
+            run_migrations()
+        except Exception as exc:
+            logger.warning("Alembic migration skipped or failed: %s", exc)
     yield
-    # Shutdown
     engine.dispose()
 
 

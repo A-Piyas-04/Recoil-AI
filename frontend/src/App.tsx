@@ -1,28 +1,23 @@
-import { useEffect, useState } from "react";
-import { api } from "./lib/api";
-import "./App.css";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AppShell } from "./components/layout/AppShell";
+import { AnalyzePage } from "./pages/AnalyzePage";
+import { HistoryPage } from "./pages/HistoryPage";
+import { HomePage } from "./pages/HomePage";
+import { ResultsPage } from "./pages/ResultsPage";
 
 function App() {
-  const [message, setMessage] = useState<string>("Loading…");
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    api
-      .get<{ message: string }>("/api/v1/ping")
-      .then((data) => setMessage(data.message))
-      .catch((err: Error) => setError(err.message));
-  }, []);
-
   return (
-    <main className="app">
-      <h1>Codex Meetup</h1>
-      <p className="tagline">FastAPI · React · PostgreSQL</p>
-      {error ? (
-        <p className="status error">API: {error}</p>
-      ) : (
-        <p className="status">API says: {message}</p>
-      )}
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/analyze" element={<AnalyzePage />} />
+          <Route path="/results/:id" element={<ResultsPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

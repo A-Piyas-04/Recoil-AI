@@ -1,20 +1,20 @@
-:root {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #0f172a;
-  background-color: #ffffff;
-}
+@import "tailwindcss";
 
-* {
-  box-sizing: border-box;
-  margin: 0;
+@theme {
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-serif: "IBM Plex Serif", Georgia, serif;
+  --color-surface: #f8f9fb;
+  --color-paper: #ffffff;
+  --color-ink: #1a2332;
+  --color-muted: #5c6b7a;
+  --color-border: #d8dee6;
+  --color-accent: #1e4d7b;
+  --color-accent-hover: #163a5f;
+  --color-risk-low: #2d6a4f;
+  --color-risk-mid: #b8860b;
+  --color-risk-high: #9b2335;
 }
 
 body {
-  min-height: 100vh;
-}
-
-#root {
-  min-height: 100vh;
+  @apply min-h-screen bg-surface font-sans text-ink antialiased;
 }

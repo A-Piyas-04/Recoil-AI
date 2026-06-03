@@ -1,2 +1,4 @@
-# Import models here so Alembic can discover them:
-# from app.models.user import User  # noqa: F401
+from app.models.analysis import Analysis
+from app.models.brand_profile import BrandProfile
+
+__all__ = ["Analysis", "BrandProfile"]

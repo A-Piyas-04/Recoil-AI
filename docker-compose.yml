@@ -28,6 +28,13 @@ services:
       - .env
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      AI_PROVIDER: ${AI_PROVIDER:-gemini}
+      AI_MOCK_MODE: ${AI_MOCK_MODE:-true}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      GEMINI_MOCK_MODE: ${GEMINI_MOCK_MODE:-true}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
